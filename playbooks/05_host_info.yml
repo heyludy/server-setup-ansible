@@ -16,7 +16,8 @@
         mode: '0755'
 
     - name: host_info.sh 실행
-      shell: cd /tmp && sudo bash /tmp/host_info.sh
+      shell: cd /tmp && bash /tmp/host_info.sh
+      become: yes
       register: script_output
 
     - name: 생성된 로그 파일 경로 확인
@@ -35,11 +36,13 @@
         src: "{{ log_file_path.stdout }}"
         dest: "~/logs/"
         flat: yes
+      become: yes
 
     - name: 워커 노드 임시 파일 정리
       file:
         path: "{{ item }}"
         state: absent
+      become: yes
       loop:
         - /tmp/host_info.sh
         - "{{ log_file_path.stdout }}"
